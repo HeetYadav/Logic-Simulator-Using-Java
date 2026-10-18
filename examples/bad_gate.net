@@ -1,0 +1,3 @@
+# Wrong gate type on line 3 (used to test the custom exception)
+INPUT A B
+FOO Y A B

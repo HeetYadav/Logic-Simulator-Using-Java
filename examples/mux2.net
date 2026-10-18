@@ -1,0 +1,7 @@
+# 2-to-1 multiplexer: Y = A when S = 0, Y = B when S = 1
+INPUT A B S
+OUTPUT Y
+NOT NS S
+AND T1 A NS
+AND T2 B S
+OR Y T1 T2

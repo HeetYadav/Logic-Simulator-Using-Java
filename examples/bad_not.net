@@ -1,0 +1,3 @@
+# NOT gate with two inputs on line 3
+INPUT A B
+NOT Y A B
