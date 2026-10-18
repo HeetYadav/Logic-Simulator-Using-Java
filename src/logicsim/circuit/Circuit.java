@@ -96,6 +96,10 @@ public class Circuit {
         inputs.get(index).setValue(value);
     }
 
+    public String getOutputName(int index) {
+        return outputs.get(index).getName();
+    }
+
     public boolean getOutput(int index) {
         return outputs.get(index).getValue();
     }
@@ -116,7 +120,7 @@ public class Circuit {
         throw new InvalidCircuitException("Circuit does not settle (loop in the circuit?)");
     }
 
-    // Prints every gate (uses the overridden display() of each gate).
+    // Prints every gate. display() is written once in Gate and inherited by all gates.
     public void displayGates() {
         for (int i = 0; i < gates.size(); i++) {
             gates.get(i).display();
