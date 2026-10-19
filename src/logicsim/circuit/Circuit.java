@@ -15,7 +15,7 @@ public class Circuit {
     private ArrayList<Gate> gates = new ArrayList<Gate>();
     private ArrayList<Wire> inputs = new ArrayList<Wire>();
     private ArrayList<Wire> outputs = new ArrayList<Wire>();
-
+// Important part of the code
     public Wire getWire(String name) {
         for (int i = 0; i < wires.size(); i++) {
             if (wires.get(i).getName().equals(name)) {

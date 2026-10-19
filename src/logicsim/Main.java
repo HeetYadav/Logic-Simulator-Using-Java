@@ -20,7 +20,7 @@ public class Main {
 
         do {
             System.out.println();
-            System.out.println("===== Digital Logic Circuit Simulator =====");
+            System.out.println("Digital Logic Circuit Simulator");
             System.out.println("1. Single gate (you choose the gate and the inputs)");
             System.out.println("2. All gates together (you choose the inputs)");
             System.out.println("3. Half adder");
@@ -61,7 +61,7 @@ public class Main {
         int g;
         do {
             System.out.println();
-            System.out.println("--- Choose a gate ---");
+            System.out.println("Choose a gate");
             for (int i = 0; i < types.length; i++) {
                 System.out.println((i + 1) + ". " + types[i]);
             }
@@ -146,7 +146,7 @@ public class Main {
         int choice;
         do {
             System.out.println();
-            System.out.println("--- " + title + " ---");
+            System.out.println(" " + title + " ");
             System.out.println("1. Enter my own inputs");
             System.out.println("2. Show truth table");
             System.out.println("0. Back");
