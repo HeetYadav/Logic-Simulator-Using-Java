@@ -1,4 +1,4 @@
-# Digital Logic Circuit Simulator - Version B (simple, for the Java lab)
+# Digital Logic Circuit Simulator 
 
 A small console program that builds digital circuits from logic gates, calculates their outputs and prints
 truth tables. Plain Java 8 syntax, standard library only (`java.util`). There is no file input or output:
