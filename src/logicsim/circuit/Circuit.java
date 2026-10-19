@@ -10,14 +10,12 @@ import logicsim.gates.OrGate;
 import logicsim.gates.Wire;
 import logicsim.gates.XorGate;
 
-// COMPOSITION (Practical 5): a Circuit "has" wires and gates.
 public class Circuit {
     private ArrayList<Wire> wires = new ArrayList<Wire>();
     private ArrayList<Gate> gates = new ArrayList<Gate>();
     private ArrayList<Wire> inputs = new ArrayList<Wire>();
     private ArrayList<Wire> outputs = new ArrayList<Wire>();
 
-    // Returns the wire with this name. If it does not exist yet, creates it.
     public Wire getWire(String name) {
         for (int i = 0; i < wires.size(); i++) {
             if (wires.get(i).getName().equals(name)) {
@@ -37,8 +35,6 @@ public class Circuit {
         outputs.add(getWire(name));
     }
 
-    // Creates the correct gate object from its type name.
-    // The reference type is Gate, the object is AndGate/OrGate/... (POLYMORPHISM).
     public void addGate(String type, String outName, String[] inNames) throws InvalidCircuitException {
         String t = type.toUpperCase();
         if (t.equals("NOT")) {
@@ -104,7 +100,6 @@ public class Circuit {
         return outputs.get(index).getValue();
     }
 
-    // Simulation: keep recalculating all gates until no output changes any more.
     public void simulate() throws InvalidCircuitException {
         for (int round = 0; round < 100; round++) {
             boolean changed = false;
@@ -114,20 +109,18 @@ public class Circuit {
                 }
             }
             if (!changed) {
-                return;   // circuit is stable
+                return;
             }
         }
         throw new InvalidCircuitException("Circuit does not settle (loop in the circuit?)");
     }
 
-    // Prints every gate. display() is written once in Gate and inherited by all gates.
     public void displayGates() {
         for (int i = 0; i < gates.size(); i++) {
             gates.get(i).display();
         }
     }
 
-    // Tries every input combination and builds the truth table as text.
     public String buildTruthTable() throws InvalidCircuitException {
         int n = inputs.size();
         if (n == 0 || outputs.size() == 0) {
@@ -147,10 +140,10 @@ public class Circuit {
         }
         sb.append("\n");
 
-        int rows = 1 << n;                         // BITWISE shift: 2 to the power n
+        int rows = 1 << n;
         for (int row = 0; row < rows; row++) {
             for (int j = 0; j < n; j++) {
-                int bit = (row >> (n - 1 - j)) & 1;   // BITWISE shift and AND
+                int bit = (row >> (n - 1 - j)) & 1;
                 inputs.get(j).setValue(bit == 1);
                 sb.append(bit).append(" ");
             }

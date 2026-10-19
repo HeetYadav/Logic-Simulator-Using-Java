@@ -1,10 +1,8 @@
 package logicsim;
 
 import logicsim.circuit.Circuit;
-import logicsim.circuit.CircuitParser;
 import logicsim.circuit.InvalidCircuitException;
 
-// Very small test program (no JUnit). Run it: it prints PASS / FAIL for each check.
 public class Tests {
     private static int passed = 0;
     private static int failed = 0;
@@ -19,7 +17,6 @@ public class Tests {
         }
     }
 
-    // Applies inputs (bit pattern) to a circuit and returns outputs as a bit pattern.
     private static int run(Circuit c, int inputBits) throws InvalidCircuitException {
         int n = c.getInputCount();
         for (int j = 0; j < n; j++) {
@@ -33,15 +30,23 @@ public class Tests {
         return result;
     }
 
+    private static boolean throwsError(Circuit c, String type, String out, String[] in) {
+        try {
+            c.addGate(type, out, in);
+            return false;
+        } catch (InvalidCircuitException e) {
+            return true;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
-        // 2-input gates, written as a netlist and checked for all 4 inputs
         String[] types = {"AND", "OR", "XOR", "NAND", "NOR"};
         int[][] expected = {
-            {0, 0, 0, 1},   // AND  for 00 01 10 11
-            {0, 1, 1, 1},   // OR
-            {0, 1, 1, 0},   // XOR
-            {1, 1, 1, 0},   // NAND
-            {1, 0, 0, 0}    // NOR
+            {0, 0, 0, 1},
+            {0, 1, 1, 1},
+            {0, 1, 1, 0},
+            {1, 1, 1, 0},
+            {1, 0, 0, 0}
         };
         for (int t = 0; t < types.length; t++) {
             Circuit c = new Circuit();
@@ -64,30 +69,51 @@ public class Tests {
         notCircuit.addGate("NOT", "Y", new String[] {"A"});
         check(run(notCircuit, 0) == 1 && run(notCircuit, 1) == 0, "NOT gate truth table");
 
-        // Full adder from file: outputs are SUM, COUT -> compare with A+B+CIN
-        Circuit fa = CircuitParser.parseFile("examples/full_adder.net");
+        Circuit threeInput = new Circuit();
+        threeInput.addInput("A");
+        threeInput.addInput("B");
+        threeInput.addInput("C");
+        threeInput.addOutput("Y");
+        threeInput.addGate("AND", "Y", new String[] {"A", "B", "C"});
+        check(run(threeInput, 7) == 1 && run(threeInput, 6) == 0, "3-input AND gate");
+
+        Circuit fa = Main.buildFullAdder();
         boolean faOk = true;
         for (int in = 0; in < 8; in++) {
             int ones = Integer.bitCount(in);
-            int expectedOut = ((ones % 2) << 1) | (ones / 2);   // SUM bit then COUT bit
+            int expectedOut = ((ones % 2) << 1) | (ones / 2);
             if (run(fa, in) != expectedOut) {
                 faOk = false;
             }
         }
-        check(faOk, "full adder file: all 8 rows");
+        check(faOk, "full adder: all 8 rows");
 
-        // Half adder from file
-        Circuit ha = CircuitParser.parseFile("examples/half_adder.net");
-        check(run(ha, 3) == 1 && run(ha, 1) == 2, "half adder file");
+        Circuit ha = Main.buildHalfAdder();
+        boolean haOk = true;
+        for (int in = 0; in < 4; in++) {
+            int ones = Integer.bitCount(in);
+            int expectedOut = ((ones % 2) << 1) | (ones / 2);
+            if (run(ha, in) != expectedOut) {
+                haOk = false;
+            }
+        }
+        check(haOk, "half adder: all 4 rows");
 
-        // Custom exception cases
-        check(throwsError("examples/bad_gate.net"), "unknown gate type -> exception");
-        check(throwsError("examples/bad_not.net"), "NOT with 2 inputs -> exception");
+        String table = Main.buildFullAdder().buildTruthTable();
+        check(table.split("\n").length == 9 && table.startsWith("A B CIN | SUM COUT"), "full adder truth table has header and 8 rows");
+
+        check(throwsError(new Circuit(), "FOO", "Y", new String[] {"A", "B"}), "unknown gate type throws exception");
+        check(throwsError(new Circuit(), "NOT", "Y", new String[] {"A", "B"}), "NOT with 2 inputs throws exception");
+        check(throwsError(new Circuit(), "AND", "Y", new String[] {"A"}), "AND with 1 input throws exception");
+
+        Circuit twoDrivers = new Circuit();
+        twoDrivers.addGate("AND", "Y", new String[] {"A", "B"});
+        check(throwsError(twoDrivers, "OR", "Y", new String[] {"A", "B"}), "two gates driving one wire throws exception");
 
         Circuit loop = new Circuit();
         loop.addInput("A");
         loop.addOutput("Y");
-        loop.addGate("NOT", "Y", new String[] {"Y"});    // NOT feeding itself never settles
+        loop.addGate("NOT", "Y", new String[] {"Y"});
         boolean loopDetected = false;
         try {
             loop.simulate();
@@ -100,15 +126,6 @@ public class Tests {
         System.out.println(passed + " passed, " + failed + " failed");
         if (failed > 0) {
             System.exit(1);
-        }
-    }
-
-    private static boolean throwsError(String file) throws Exception {
-        try {
-            CircuitParser.parseFile(file);
-            return false;
-        } catch (InvalidCircuitException e) {
-            return e.getMessage().startsWith("line ");
         }
     }
 }

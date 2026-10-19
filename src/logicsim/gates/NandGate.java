@@ -5,7 +5,6 @@ public class NandGate extends Gate {
         super("NAND", output, inputs);
     }
 
-    // NAND = NOT (AND)
     @Override
     public boolean evaluate() {
         boolean result = true;

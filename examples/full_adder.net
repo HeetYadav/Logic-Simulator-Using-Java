@@ -1,8 +1,0 @@
-# Full adder from two half adders and an OR gate
-INPUT A B CIN
-OUTPUT SUM COUT
-XOR P A B
-XOR SUM P CIN
-AND G A B
-AND T P CIN
-OR COUT G T

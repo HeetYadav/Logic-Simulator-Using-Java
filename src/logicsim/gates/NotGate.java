@@ -5,7 +5,6 @@ public class NotGate extends Gate {
         super("NOT", output, inputs);
     }
 
-    // Output is the opposite of the single input.
     @Override
     public boolean evaluate() {
         return !getInput(0);

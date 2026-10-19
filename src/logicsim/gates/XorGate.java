@@ -5,7 +5,6 @@ public class XorGate extends Gate {
         super("XOR", output, inputs);
     }
 
-    // Output is 1 if an odd number of inputs are 1.
     @Override
     public boolean evaluate() {
         boolean result = false;

@@ -5,7 +5,6 @@ public class NorGate extends Gate {
         super("NOR", output, inputs);
     }
 
-    // NOR = NOT (OR)
     @Override
     public boolean evaluate() {
         boolean result = false;
