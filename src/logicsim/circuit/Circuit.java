@@ -1,6 +1,7 @@
 package logicsim.circuit;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import logicsim.gates.AndGate;
 import logicsim.gates.Gate;
 import logicsim.gates.NandGate;
@@ -11,24 +12,26 @@ import logicsim.gates.Wire;
 import logicsim.gates.XorGate;
 
 public class Circuit {
-    private ArrayList<Wire> wires = new ArrayList<Wire>();
+    private HashMap<String, Wire> wires = new HashMap<String, Wire>();
     private ArrayList<Gate> gates = new ArrayList<Gate>();
     private ArrayList<Wire> inputs = new ArrayList<Wire>();
     private ArrayList<Wire> outputs = new ArrayList<Wire>();
 // Important part of the code
     public Wire getWire(String name) {
-        for (int i = 0; i < wires.size(); i++) {
-            if (wires.get(i).getName().equals(name)) {
-                return wires.get(i);
-            }
+        Wire w = wires.get(name);
+        if (w == null) {
+            w = new Wire(name);
+            wires.put(name, w);
         }
-        Wire w = new Wire(name);
-        wires.add(w);
         return w;
     }
 
-    public void addInput(String name) {
-        inputs.add(getWire(name));
+    public void addInput(String name) throws InvalidCircuitException {
+        Wire w = getWire(name);
+        if (inputs.contains(w)) {
+            throw new InvalidCircuitException("Input " + name + " is added twice");
+        }
+        inputs.add(w);
     }
 
     public void addOutput(String name) {
@@ -46,6 +49,9 @@ public class Circuit {
         }
 
         Wire out = getWire(outName);
+        if (inputs.contains(out)) {
+            throw new InvalidCircuitException("Wire " + outName + " is a circuit input, a gate cannot drive it");
+        }
         for (int i = 0; i < gates.size(); i++) {
             if (gates.get(i).getOutput() == out) {
                 throw new InvalidCircuitException("Wire " + outName + " is driven by two gates");

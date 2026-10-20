@@ -1,7 +1,7 @@
 package logicsim.gates;
 
 public class Wire {
-    private String name;
+    private final String name;
     private boolean value;
 
     public Wire(String name) {

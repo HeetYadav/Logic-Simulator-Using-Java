@@ -110,6 +110,20 @@ public class Tests {
         twoDrivers.addGate("AND", "Y", new String[] {"A", "B"});
         check(throwsError(twoDrivers, "OR", "Y", new String[] {"A", "B"}), "two gates driving one wire throws exception");
 
+        Circuit drivesInput = new Circuit();
+        drivesInput.addInput("A");
+        check(throwsError(drivesInput, "AND", "A", new String[] {"B", "C"}), "gate driving an input wire throws exception");
+
+        Circuit sameInput = new Circuit();
+        sameInput.addInput("A");
+        boolean duplicateDetected = false;
+        try {
+            sameInput.addInput("A");
+        } catch (InvalidCircuitException e) {
+            duplicateDetected = true;
+        }
+        check(duplicateDetected, "adding the same input twice throws exception");
+
         Circuit loop = new Circuit();
         loop.addInput("A");
         loop.addOutput("Y");

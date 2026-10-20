@@ -1,14 +1,14 @@
 package logicsim.gates;
 
 public abstract class Gate implements Displayable {
-    private String type;
-    private Wire[] inputs;
-    private Wire output;
+    private final String type;
+    private final Wire[] inputs;
+    private final Wire output;
 
     public Gate(String type, Wire output, Wire[] inputs) {
         this.type = type;
         this.output = output;
-        this.inputs = inputs;
+        this.inputs = inputs.clone();
     }
 
     public abstract boolean evaluate();
