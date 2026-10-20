@@ -124,7 +124,7 @@ public class Circuit {
     public String buildTruthTable() throws InvalidCircuitException {
         int n = inputs.size();
         if (n == 0 || outputs.size() == 0) {
-            throw new InvalidCircuitException("Circuit needs INPUT and OUTPUT lines");
+            throw new InvalidCircuitException("Circuit needs at least one input and one output");
         }
         if (n > 10) {
             throw new InvalidCircuitException("Too many inputs for a truth table (max 10)");

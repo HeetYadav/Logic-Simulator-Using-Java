@@ -95,8 +95,8 @@ public class Main {
             System.out.println();
             Wire a = new Wire("A");
             Wire b = new Wire("B");
-            a.setValue(readBit(sc, "A") == 1);
-            b.setValue(readBit(sc, "B") == 1);
+            a.setValue(readRange(sc, "Value of A (0 or 1): ", 0, 1) == 1);
+            b.setValue(readRange(sc, "Value of B (0 or 1): ", 0, 1) == 1);
             Wire[] two = {a, b};
             Wire[] one = {a};
 
@@ -171,7 +171,8 @@ public class Main {
         do {
             System.out.println();
             for (int i = 0; i < c.getInputCount(); i++) {
-                c.setInput(i, readBit(sc, c.getInputName(i)) == 1);
+                String prompt = "Value of " + c.getInputName(i) + " (0 or 1): ";
+                c.setInput(i, readRange(sc, prompt, 0, 1) == 1);
             }
             c.simulate();
 
@@ -202,24 +203,11 @@ public class Main {
         }
     }
 
-    private static int readBit(Scanner sc, String name) {
-        int value = -1;
-        while (value != 0 && value != 1) {
-            value = readChoice(sc, "Value of " + name + " (0 or 1): ");
-            if (value != 0 && value != 1) {
-                System.out.println("Please type 0 or 1.");
-            }
-        }
-        return value;
-    }
-
     private static int readRange(Scanner sc, String prompt, int min, int max) {
-        int value = min - 1;
+        int value = readChoice(sc, prompt);
         while (value < min || value > max) {
+            System.out.println("Please type a number from " + min + " to " + max + ".");
             value = readChoice(sc, prompt);
-            if (value < min || value > max) {
-                System.out.println("Please type a number from " + min + " to " + max + ".");
-            }
         }
         return value;
     }
